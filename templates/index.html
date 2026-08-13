@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Email Checker</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo-title">
+            <div class="email-icon">✉</div>
+
+            <h1>Email Checker</h1>
+        </div>
+
+        <p>
+            Check whether an email address is associated with online services.
+        </p>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <form method="POST" class="search-form">
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Enter email address"
+            value="{{ email }}"
+            required
+        >
+
+        <button type="submit">
+            Check Email
+        </button>
+
+    </form>
+
+
+    {% if results %}
+
+    <!-- RESULTS CONTAINER -->
+
+    <section class="results-container">
+
+        <!-- RESULTS HEADER -->
+
+        <div class="results-header">
+
+            <div>
+
+                <h2>
+                    <span class="results-icon">☷</span>
+                    Results
+                </h2>
+
+            </div>
+
+            <div class="scan-info">
+
+                <div class="scan-complete">
+                    ✓ Scan completed
+                </div>
+
+                <div>
+                    {{ total_checked }} websites checked
+                    {% if scan_time %}
+                    in {{ scan_time }} seconds
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <div class="stats">
+
+            <div class="stat-card found-stat">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <strong>{{ found|length }}</strong>
+                    <span>Accounts Found</span>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon neutral">
+                    −
+                </div>
+
+                <div>
+                    <strong>{{ not_found|length }}</strong>
+                    <span>Not Found</span>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon warning">
+                    ◷
+                </div>
+
+                <div>
+                    <strong>{{ rate_limited|length }}</strong>
+                    <span>Rate Limited</span>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    ◎
+                </div>
+
+                <div>
+                    <strong>{{ total_checked }}</strong>
+                    <span>Total Checked</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOUND -->
+
+        <div class="section-title found-title">
+
+            <span class="green-dot"></span>
+
+            Accounts Found ({{ found|length }})
+
+        </div>
+
+
+        <div class="service-list">
+
+            {% for item in found %}
+
+            <div class="service-row">
+
+                <div class="service-info">
+
+                    <img
+                        class="service-logo"
+                        src="https://www.google.com/s2/favicons?domain={{ item.domain }}&sz=64"
+                        alt="{{ item.name }}"
+                    >
+
+                    <div>
+
+                        <div class="service-name">
+                            {{ item.name }}
+                        </div>
+
+                        <div class="service-domain">
+                            {{ item.domain }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="status found">
+                    FOUND
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- NOT FOUND -->
+
+        <details class="collapsed-section">
+
+            <summary>
+
+                <span>
+                    <span class="gray-dot"></span>
+                    Not Found ({{ not_found|length }})
+                </span>
+
+                <span>⌄</span>
+
+            </summary>
+
+
+            <div class="collapsed-content">
+
+                {% for item in not_found %}
+
+                <div class="small-service-row">
+
+                    <img
+                        class="service-logo small"
+                        src="https://www.google.com/s2/favicons?domain={{ item.domain }}&sz=64"
+                        alt=""
+                    >
+
+                    <span>{{ item.name }}</span>
+
+                    <span class="domain">
+                        {{ item.domain }}
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </details>
+
+
+        <!-- RATE LIMITED -->
+
+        <details class="collapsed-section">
+
+            <summary>
+
+                <span>
+                    <span class="orange-dot"></span>
+                    Rate Limited ({{ rate_limited|length }})
+                </span>
+
+                <span>⌄</span>
+
+            </summary>
+
+
+            <div class="collapsed-content">
+
+                {% for item in rate_limited %}
+
+                <div class="small-service-row">
+
+                    <img
+                        class="service-logo small"
+                        src="https://www.google.com/s2/favicons?domain={{ item.domain }}&sz=64"
+                        alt=""
+                    >
+
+                    <span>{{ item.name }}</span>
+
+                    <span class="domain">
+                        {{ item.domain }}
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </details>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        🔒 Results are generated using Holehe
+        <span>•</span>
+        Only public information is processed
+
+    </footer>
+
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
